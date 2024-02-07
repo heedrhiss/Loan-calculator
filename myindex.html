@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./myindex.css" type="text/css">
+    <title>Loan Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <div class="upper">
+            <h1>LOAN CALCULATOR</h1>
+            <form id="loan-form">
+            <!-- <label for="">$</label> -->
+            <input type="number" id="amount" placeholder="$ Loan Amount"> <br>
+            <!-- <label for="">%</label> -->
+            <input type="number" id="interest" placeholder="% Interest Amount">
+             <br><input type="number" id="years" placeholder="Years to Repay"> <br>
+             <input type="submit" id="submit" value="Calculate">
+            </form>
+            <div class="loading">
+                <center>
+                <img src="./img/loading.gif" alt="">
+            </center>
+            </div>
+        </div>
+        <div class="lower">
+            <h3>Results</h3>
+            <label>Monthly Payment </label>
+            <input type="number" class="monthly-payment" disabled><br>
+            <label>Total Payment </label>
+            <input type="number" class="total-payment" disabled><br>
+            <label>Total Interest </label>
+            <input type="number" class="total-interest" disabled>
+        </div>
+    </div>
+</body>
+<script>
+    const amount= document.querySelector('#amount');
+const int= document.getElementById('interest');
+const year= document.getElementById('years');
+const monthPay= document.querySelector('.monthly-payment');
+const totalPay= document.querySelector('.total-payment');
+const totalInt= document.querySelector('.total-interest');
+
+document.getElementById('loan-form').addEventListener('submit',(e)=>{
+    e.preventDefault()
+    document.querySelector('.lower').style.display= "none";
+    document.querySelector('.loading').style.display= "block";
+
+    setTimeout(calculation, 2000)
+});
+
+function calculation(){
+    const principal= +(amount.value);
+    const interest= +(int.value)/100/12;
+    const years= +(year.value)*12;
+    var x= Math.pow(1+ interest,years)
+    var monthlyPay= ((principal*x*interest)/(x-1));
+
+    if(isFinite(monthlyPay)){
+        document.querySelector('.lower').style.display= "block";
+        document.querySelector('.loading').style.display= "none";
+        monthPay.value= monthlyPay.toFixed(2);
+        totalPay.value= (monthlyPay*years).toFixed(2);
+        totalInt.value= ((monthlyPay*years)-principal).toFixed(2);
+    }
+    else{
+      showError();
+    }
+    function showError(e){
+        const card= document.querySelector('.container');
+        const up= document.querySelector('.upper')
+        const errorMessage= document.createElement('div');
+        errorMessage.className= "errorMessage";
+        errorMessage.appendChild(document.createTextNode('Please check all fields'));
+        card.insertBefore(errorMessage, up);
+
+        setTimeout(function errorTime(){
+            document.querySelector('.errorMessage').remove();
+            
+        document.querySelector('.loading').style.display= "none";
+        // document.querySelector('.lower').style.display= "block";
+        }, 3000);
+        // e.preventDefault();
+    }
+
+};
+</script>
+</html>
