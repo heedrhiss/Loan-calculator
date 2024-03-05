@@ -1,3 +1,3 @@
 # JScript Project
 
-Javascript project on loan calculator.
+Javascript project on loan calculator...
